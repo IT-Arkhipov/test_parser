@@ -1,10 +1,8 @@
 import pytest
-from lib.init import settings
 
 
 class TestMockResults:
     def test_pass(self):
-        print(settings.send_report)
         assert True
 
     def test_fail(self):

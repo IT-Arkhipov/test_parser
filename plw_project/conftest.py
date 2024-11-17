@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
-from plw_project.pages.add_remove import AddRemovePage
+from plw_project.pages.import_pages import *
 
 
 # def pytest_addoption(parser):
@@ -35,27 +35,22 @@ def page(is_headless) -> Page:
         browser.close()
 
 
-# @pytest.fixture(scope="class")
-# def setup_class(request, page: Page):
-#     def convert_class_name(class_name: str):
-#         result = ""
-#         for char in class_name.replace("Test", ""):
-#             if char.isupper():
-#                 result += "_" + char.lower()
-#             else:
-#                 result += char
-#         return result.lstrip("_")
-#
-#     class_name = request.cls.__name__
-#     page_class = AddRemovePage
-#
-#     # Create the page object
-#     page_obj = page_class(page)
-#
-#     # Inject the object into the test class
-#     setattr(request.cls, 'page', page)
-#     setattr(request.cls, f'{convert_class_name(class_name)}', page_obj)
-#
-#     print(f"Setting up {class_name}")
-#     page_obj.open()
-#     yield
+class_name = {
+    'TestAddRemove': AddRemovePage,
+    'TestHerokuapp': HerokuappPage
+}
+
+
+@pytest.fixture(scope="class", autouse=True)
+def setup_class(request, page: Page):
+    # Create the page object
+    page_class = class_name.get(request.cls.__name__)
+    page_obj = page_class(page)
+
+    # Inject the object into the test class
+    setattr(request.cls, 'page', page_obj)
+    page_obj.open()
+
+    yield
+
+

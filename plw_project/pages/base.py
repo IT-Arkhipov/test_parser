@@ -49,3 +49,6 @@ class BasePage:
 
     def is_heading_visible(self, text) -> bool:
         return self.page.get_by_role('heading', name=text, exact=True).is_visible()
+
+    def get_element_text(self, selector):
+        return self.page.locator(selector).inner_text()
